@@ -61,10 +61,6 @@ credentials = storage.get()
 if credentials is None or credentials.invalid == True:
   credentials = run(FLOW, storage)
 
-http = httplib2.Http()
-http = credentials.authorize(http)
-
-service = build(serviceName='calendar', version='v3', http=http, developerKey = developerKey)
 
 print '** Authentication finished.'
 print '** Ready.'
@@ -126,6 +122,9 @@ def appLoop():
   print ' * Sending event to Google...'
   
   # Send to Google Calendar
+  http = httplib2.Http()
+  http = credentials.authorize(http)
+  service = build(serviceName='calendar', version='v3', http=http, developerKey = developerKey)
   eventSent = service.events().insert(calendarId = 'primary', body=event).execute()
   
   print ' * Event ' + eventSent['id'] + ' created. Done.'
