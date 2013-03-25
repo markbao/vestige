@@ -56,3 +56,8 @@ keys and set the environment variables for `VESTIGE_CLIENT_ID`,
 Then do `python vestige.py` again and follow the on-screen instructions.
 
 Now you're done.
+
+## Todo
+
+* Add counter like 'Working for 1 hour and 25 minutes.'
+* Support different calendars (as categories). 'Personal - Doing taxes' would go into the Personal calendar.
