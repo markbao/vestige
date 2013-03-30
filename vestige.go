@@ -129,7 +129,7 @@ func applicationLoop() {
 		if err == nil {
 			fmt.Println(" * Sent.")
 		} else {
-			fmt.Println(" * An error occurred:")
+			fmt.Println(" ! An error occurred:")
 			fmt.Println(err)
 		}
 
@@ -144,7 +144,7 @@ func loadCalendars() {
 	calendarListFromApi, err := calendarApi.CalendarList.List().MaxResults(50).MinAccessRole("writer").Do()
 
 	if err != nil {
-		fmt.Println(" * An error occurred:")
+		fmt.Println(" ! An error occurred:")
 		fmt.Println(err)
 		os.Exit(1)
 	}
@@ -263,7 +263,7 @@ func createCalendar(name string) string {
 	calendarData, err := calendarApi.Calendars.Insert(&calendarNew).Do()
 
 	if err != nil {
-		fmt.Println(" * An error occurred:")
+		fmt.Println(" ! An error occurred:")
 		fmt.Println(err)
 	} else {
 		fmt.Println(" * Calendar created:", name)
