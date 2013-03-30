@@ -33,10 +33,12 @@ var oauthConfig = &oauth.Config{
 
 // Define flags from command line
 var (
-	clientId   = flag.String("clientid", "", "OAuth Client ID")
-	secret     = flag.String("secret", "", "OAuth Client Secret")
-	cacheToken = flag.Bool("cachetoken", true, "cache the OAuth token")
-	debug      = flag.Bool("debug", false, "show HTTP traffic")
+	clientId        = flag.String("clientid", "", "OAuth Client ID")
+	secret          = flag.String("secret", "", "OAuth Client Secret")
+	cacheToken      = flag.Bool("cachetoken", true, "cache the OAuth token")
+	debug           = flag.Bool("debug", false, "show HTTP traffic")
+	singleCalendar  = flag.Bool("single", false, "only put events into a single calendar")
+	primaryCalendar = flag.String("primary", "", "specify the default calendar for events to go in, by name")
 )
 
 // Make the OAuth Client and the Calendar API client available for all
@@ -56,7 +58,14 @@ func main() {
 	// Parse the flags first
 	flag.Parse()
 
+	fmt.Println("")
 	fmt.Println("-- vestige 1.0 ----------------------------")
+
+	// Display flags if necessary
+	if *singleCalendar {
+		fmt.Println(" * Loading in single calendar mode.")
+	}
+
 	fmt.Println(" * Authenticating to Google...")
 
 	// Set the Client ID and Secret
@@ -179,25 +188,30 @@ func createEvent(summary string, startTime time.Time, endTime time.Time) error {
 	// Prepare a calendarForEvent string for the calendar name
 	calendarIdForEvent := ""
 
-	// Check splitSummary to see if it matches the original
-	if splitSummary[0] == summary {
-		// No hyphen, so we want to put this in the primary
+	if *singleCalendar {
+		// We are in single calendar mode.
+		// No matter what, put it in one calendar
+		// This would be the primary calendar
 		calendarIdForEvent = primaryCalendarID
 	} else {
-		// So, there is a hyphen, and we know what's on the left side now
-		eventCategoryName := strings.ToLower(splitSummary[0])
-
-		// See if this exists in the map...
-		if calendarList[eventCategoryName] == "" {
-			// This does not exist, so we have to create it
-			calendarIdForEvent = createCalendar(splitSummary[0])
+		// Check splitSummary to see if it matches the original
+		if splitSummary[0] == summary {
+			// No hyphen, so we want to put this in the primary
+			calendarIdForEvent = primaryCalendarID
 		} else {
-			// It does exist, so let's use the resulting calendar ID
-			calendarIdForEvent = calendarList[eventCategoryName]
+			// So, there is a hyphen, and we know what's on the left side now
+			eventCategoryName := strings.ToLower(splitSummary[0])
+
+			// See if this exists in the map...
+			if calendarList[eventCategoryName] == "" {
+				// This does not exist, so we have to create it
+				calendarIdForEvent = createCalendar(splitSummary[0])
+			} else {
+				// It does exist, so let's use the resulting calendar ID
+				calendarIdForEvent = calendarList[eventCategoryName]
+			}
 		}
 	}
-
-	fmt.Println(calendarIdForEvent)
 
 	_, err := calendarApi.Events.Insert(calendarIdForEvent, &eventNew).Do()
 
