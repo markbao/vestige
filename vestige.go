@@ -250,6 +250,11 @@ func createEvent(summary string, startTime time.Time, endTime time.Time) error {
 		}
 	}
 
+	// Let's work with the summary itself, and format it a bit
+	// Things always look nicer with m-dashes, so let's make sure we have 'em
+	r := strings.NewReplacer(" - ", " — ")
+	eventNew.Summary = r.Replace(summary)
+
 	_, err := calendarApi.Events.Insert(calendarIdForEvent, &eventNew).Do()
 
 	return err
