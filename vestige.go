@@ -150,6 +150,12 @@ func loadCalendars() {
 	}
 }
 
+// createEvent
+// Creates an event with the parameters.
+// 
+// IN:  summary (string), startTime (Time), endTime (Time)
+// OUT: error (error)
+
 func createEvent(summary string, startTime time.Time, endTime time.Time) error {
 	// create the event and return an err
 	eventStart := calendar.EventDateTime{
@@ -166,10 +172,67 @@ func createEvent(summary string, startTime time.Time, endTime time.Time) error {
 		End:     &eventEnd,
 	}
 
-	_, err := calendarApi.Events.Insert("data@markbao.com", &eventNew).Do()
+	// Category logic
+	// Let's see if this summary has a spaced hyphen ( - ) in the middle
+	splitSummary := strings.Split(summary, " - ")
+
+	// Prepare a calendarForEvent string for the calendar name
+	calendarIdForEvent := ""
+
+	// Check splitSummary to see if it matches the original
+	if splitSummary[0] == summary {
+		// No hyphen, so we want to put this in the primary
+		calendarIdForEvent = primaryCalendarID
+	} else {
+		// So, there is a hyphen, and we know what's on the left side now
+		eventCategoryName := strings.ToLower(splitSummary[0])
+
+		// See if this exists in the map...
+		if calendarList[eventCategoryName] == "" {
+			// This does not exist, so we have to create it
+			calendarIdForEvent = createCalendar(splitSummary[0])
+		} else {
+			// It does exist, so let's use the resulting calendar ID
+			calendarIdForEvent = calendarList[eventCategoryName]
+		}
+	}
+
+	fmt.Println(calendarIdForEvent)
+
+	_, err := calendarApi.Events.Insert(calendarIdForEvent, &eventNew).Do()
 
 	return err
 }
+
+// createCalendar
+// Create a calendar given a name, return the calendarId.
+//
+// IN:  name (string)
+// OUT: calendarId (string)
+
+func createCalendar(name string) string {
+	// Initialize a Calendar struct
+	calendarNew := calendar.Calendar {
+		Summary: name,
+	}
+
+	// Insert it into the Calendar API
+	calendarData, err := calendarApi.Calendars.Insert(&calendarNew).Do()
+
+	if err != nil {
+		fmt.Println(" * An error occurred:")
+		fmt.Println(err)
+	} else {
+		fmt.Println(" * Calendar created:", name)
+	}
+
+	// Append this to the calendarList
+	calendarList[strings.ToLower(name)] = calendarData.Id
+
+	return calendarData.Id
+}
+
+
 
 // Google API
 
