@@ -61,7 +61,8 @@ Once you're done, hit enter.
 You can change the behavior of this, too.
 
 * To change your default calendar, use `--default=NameOfCalendar`. All uncategorized notes will go in here.
-* To restrict *all* of your work items to one calendar, use `--single=true`. This will put them in your default calendar.
+* To restrict *all* of your work items to one calendar, use `--single`. This will put them in your default calendar.
+* To be notified when you've been idle for more than 2 minutes, use `--remind`. This will sound a terminal bell when you've been idle for 2 minutes.
 
 ## Install
 
