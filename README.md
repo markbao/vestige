@@ -6,36 +6,7 @@ Time passes by quickly, and sometimes we don't know what happened during our day
 
 Partially inspired by Chris Dancy's insane [Google Calendar tracking system](http://www.wired.com/wiredenterprise/2013/02/quantified-work/all/).
 
-## How?
-
-First you...
-
-````
-❯ go run vestige.go --clientid="your-client-id.apps.googleusercontent.com" --secret="your-api-secret"
-
--- vestige 1.0 ----------------------------
- * Authenticating to Google...
- * Loading calendars...
- * Ready.
-
-
--- NEW WORK ITEM --------------------------
- * What are you working on?
-   Relationships — Email John about new strategy
-
- * Started at 7:45PM
-   Hit Enter to finish work
-
- * Sending to Google...
- * Sent.
--- END WORK ITEM --------------------------
-````
-
-And then...
-
 ![](http://i.imgur.com/k895ZlZ.png)
-
-And then you get back to work.
 
 ## How it works
 
