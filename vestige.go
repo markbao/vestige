@@ -94,6 +94,9 @@ func main() {
 	applicationLoop()
 }
 
+// applicationLoop()
+// The loop that operates the New Work Item -> Work mode -> End Work Item vicious cycle.
+
 func applicationLoop() {
 	for {
 		var workItem string
@@ -138,6 +141,10 @@ func applicationLoop() {
 		fmt.Println("")
 	}
 }
+
+// loadCalendars
+// Loads the list of calendars from the API, and puts them into the calendarList.
+// Also handles logic for default calendar override.
 
 func loadCalendars() {
 	// List available calendars
@@ -190,6 +197,7 @@ func loadCalendars() {
 
 // createEvent
 // Creates an event with the parameters.
+// Handles the logic for determining what calendar to put it in.
 // 
 // IN:  summary (string), startTime (Time), endTime (Time)
 // OUT: error (error)
