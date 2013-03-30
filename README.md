@@ -10,6 +10,12 @@ Partially inspired by Chris Dancy's insane [Google Calendar tracking system](htt
 
 ## How it works
 
+Run the program.
+
+````
+go run vestige.go --clientid="your-client-id" --secret="your-api-secret"
+````
+
 You enter `Notes - Wikipedia page on Emu War` and hit enter. Notes is the category, the rest is the activity.
 
 ````
@@ -31,9 +37,9 @@ Once you're done, hit enter.
 
 You can change the behavior of this, too.
 
-* To change your default calendar, use `--default=NameOfCalendar`. All uncategorized notes will go in here.
-* To restrict *all* of your work items to one calendar, use `--single`. This will put them in your default calendar.
-* To be notified when you've been idle for more than 2 minutes, use `--remind`. This will sound a terminal bell when you've been idle for 2 minutes.
+* **Default calendar**: To change your default calendar, use `--default=NameOfCalendar`. All uncategorized notes will go in here.
+* **Single calendar mode**: To restrict *all* of your work items to one calendar, use `--single`. This will put them in your default calendar.
+* **Idle reminder**: To be notified when you've been idle for more than 2 minutes, use `--remind`. This will sound a terminal bell when you've been idle for 2 minutes.
 
 ## Install
 
@@ -43,6 +49,8 @@ First, install the Go packages for OAuth and the Google API Go Client:
 go get code.google.com/p/goauth2/oauth
 go get code.google.com/p/google-api-go-client/calendar/v3
 ````
+
+You may need to use `sudo` to get these installed into your Go `pkg` directory.
 
 Next, register an application at the
 [Google API Console](https://code.google.com/apis/console/), enable Google
@@ -85,5 +93,5 @@ The first version of Vestige was written in Python. It's still usable, but the G
 * Make it possible to load the Client ID and Secret from the bash configuration or save it somewhere
 * Add counter like 'Working for 1 hour and 25 minutes.'
 * Figure out a way to make sending the event data to Google not so slow (is it doing more handshakes than necessary?)
-* Make it pester you (ring a terminal bell?) when you don't update it for a few minutes.
+* Done! — Make it pester you (ring a terminal bell?) when you don't update it for a few minutes.
 
