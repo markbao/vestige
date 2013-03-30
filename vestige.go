@@ -39,8 +39,12 @@ var (
 	debug      = flag.Bool("debug", false, "show HTTP traffic")
 )
 
+// Make the OAuth Client and the Calendar API client available for all
 var oauthClient *http.Client
 var calendarApi *calendar.Service
+
+// Initialize an empty calendar list for later caching of calendars
+var calendarList = make(map[string]string)
 
 func main() {
 	// Parse the flags first
@@ -59,7 +63,10 @@ func main() {
 	// Initialize the Calendar API
 	calendarApi, _ = calendar.New(oauthClient)
 
-	// TODO: List calendars here
+	// Load all calendars and populate the calendarList variable.
+	fmt.Println(" * Loading calendars...")
+	loadCalendars()
+
 	fmt.Println(" * Ready.")
 	fmt.Println("")
 	fmt.Println("")
@@ -110,6 +117,24 @@ func applicationLoop() {
 		fmt.Println("-- END WORK ITEM --------------------------")
 		fmt.Println("")
 		fmt.Println("")
+	}
+}
+
+func loadCalendars() {
+	// List available calendars
+	calendarListFromApi, err := calendarApi.CalendarList.List().MaxResults(50).MinAccessRole("writer").Do();
+
+	if err != nil {
+		fmt.Println(" * An error occurred:")
+		fmt.Println(err);
+		os.Exit(1)
+	}
+
+	// Calendars are now listed into calendarList
+	// Let's get them out into the calendarList map
+	for _,element := range calendarListFromApi.Items {
+		// Assign the lowercased name to the ID of the calendar
+		calendarList[strings.ToLower(element.Summary)] = element.Id
 	}
 }
 
