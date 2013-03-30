@@ -39,6 +39,7 @@ var (
 	debug           = flag.Bool("debug", false, "show HTTP traffic")
 	singleCalendar  = flag.Bool("single", false, "only put events into a single calendar")
 	defaultCalendar = flag.String("default", "", "specify the default calendar for events to go in, by name")
+	remind          = flag.Bool("remind", false, "make the application ring a bell after 2 minutes of being idle")
 )
 
 // Make the OAuth Client and the Calendar API client available for all
@@ -49,10 +50,13 @@ var calendarApi *calendar.Service
 var calendarList = make(map[string]string)
 
 // Initialize a string with the calendar name of the default calendar
-var defaultCalendarName string;
+var defaultCalendarName string
 
 // Initialize a string with the calendar ID of the default calendar
-var defaultCalendarId string;
+var defaultCalendarId string
+
+// Initialize a bool specifying whether user is currently working
+var humanIsGettingWorkDone bool
 
 func main() {
 	// Parse the flags first
@@ -68,6 +72,10 @@ func main() {
 
 	if *defaultCalendar != "" {
 		fmt.Println(" * Selecting a default calendar:", *defaultCalendar)
+	}
+
+	if *remind {
+		fmt.Println(" * Idle reminder enabled; terminal bell after 2 minutes idle.")
 	}
 
 	fmt.Println(" * Authenticating to Google...")
@@ -102,13 +110,23 @@ func applicationLoop() {
 		var workItem string
 		var scanDummy string
 
+		humanIsGettingWorkDone = false; // get to work, human!
+
 		fmt.Println("-- NEW WORK ITEM --------------------------")
 		fmt.Println(" * What are you working on?")
+
+		// if the --remind flag is true, make sure we set the idle reminder
+		if *remind {
+			setReminder();
+		}
 
 		// Get the work item
 		fmt.Print("   ")
 		bufioReader := bufio.NewReader(os.Stdin)
 		workItem, _ = bufioReader.ReadString('\n')
+
+		// Set human work status
+		humanIsGettingWorkDone = true;
 
 		// Save the current time
 		startTime := time.Now()
@@ -287,6 +305,22 @@ func createCalendar(name string) string {
 	calendarList[strings.ToLower(name)] = calendarData.Id
 
 	return calendarData.Id
+}
+
+
+func setReminder() {
+	// Create a goroutine to process the bell
+	go func() {
+		// Remind the user in 2 minutes
+		time.Sleep(2 * time.Minute)
+
+		// TODO: Use a channel here to kill the goroutine when work starts
+		if (humanIsGettingWorkDone != true) {
+			fmt.Print("\a")
+			fmt.Println("You've been idle for 2 minutes.")
+			fmt.Print("   ")
+		}
+	}()
 }
 
 
