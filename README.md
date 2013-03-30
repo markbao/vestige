@@ -1,4 +1,4 @@
-# vestige
+# Vestige
 
 ### Command-line time tracking to Google Calendar, with task categorization. Written in Go.
 
