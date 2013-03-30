@@ -188,7 +188,8 @@ func loadCalendars() {
 			// This means we never found a match for the default calendar
 			// in the loop above. Error out and exit.
 			fmt.Println(" ! You specified the following default calendar:", *defaultCalendar)
-			fmt.Println(" ! Unfortunately, it could not be found.")
+			fmt.Println(" ! Unfortunately, it could not be found,")
+			fmt.Println(" ! or you do not have write access to it.")
 			fmt.Println(" ! Please check the spelling and try again.")
 			os.Exit(1)
 		}
