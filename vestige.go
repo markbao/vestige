@@ -38,7 +38,7 @@ var (
 	cacheToken      = flag.Bool("cachetoken", true, "cache the OAuth token")
 	debug           = flag.Bool("debug", false, "show HTTP traffic")
 	singleCalendar  = flag.Bool("single", false, "only put events into a single calendar")
-	primaryCalendar = flag.String("primary", "", "specify the default calendar for events to go in, by name")
+	defaultCalendar = flag.String("default", "", "specify the default calendar for events to go in, by name")
 )
 
 // Make the OAuth Client and the Calendar API client available for all
@@ -48,11 +48,11 @@ var calendarApi *calendar.Service
 // Initialize an empty calendar list for later caching of calendars
 var calendarList = make(map[string]string)
 
-// Initialize a string with the calendar name of the primary calendar
-var primaryCalendarName string;
+// Initialize a string with the calendar name of the default calendar
+var defaultCalendarName string;
 
-// Initialize a string with the calendar ID of the primary calendar
-var primaryCalendarID string;
+// Initialize a string with the calendar ID of the default calendar
+var defaultCalendarId string;
 
 func main() {
 	// Parse the flags first
@@ -64,6 +64,10 @@ func main() {
 	// Display flags if necessary
 	if *singleCalendar {
 		fmt.Println(" * Loading in single calendar mode.")
+	}
+
+	if *defaultCalendar != "" {
+		fmt.Println(" * Selecting a default calendar:", *defaultCalendar)
 	}
 
 	fmt.Println(" * Authenticating to Google...")
@@ -151,10 +155,35 @@ func loadCalendars() {
 		// Assign the lowercased name to the ID of the calendar
 		calendarList[strings.ToLower(element.Summary)] = element.Id
 
-		// Check if it's the primary
-		if element.Primary {
-			primaryCalendarName = strings.ToLower(element.Summary)
-			primaryCalendarID = strings.ToLower(element.Id)
+		if *defaultCalendar == "" {
+			// Since defaultCalendar is not being overridden, we use the real default calendar
+			// Check if it's the Primary calendar
+			if element.Primary {
+				defaultCalendarName = strings.ToLower(element.Summary)
+				defaultCalendarId = strings.ToLower(element.Id)
+			}
+		} else {
+			// defaultCalendar is being overridden, so check if this is the default calendar
+			if strings.ToLower(*defaultCalendar) == strings.ToLower(element.Summary) {
+				defaultCalendarName = strings.ToLower(element.Summary)
+				defaultCalendarId = strings.ToLower(element.Id)
+				fmt.Println(" * Promoted", element.Summary, "to default calendar.")
+			}
+		}
+	}
+
+	// Now that we've finished with the loop, let's check if
+	// we are overriding defaultCalendar, and if so, make sure
+	// that the requirement was satisfied
+	if *defaultCalendar != "" {
+		// Check existence of the ID
+		if defaultCalendarId == "" {
+			// This means we never found a match for the default calendar
+			// in the loop above. Error out and exit.
+			fmt.Println(" ! You specified the following default calendar:", *defaultCalendar)
+			fmt.Println(" ! Unfortunately, it could not be found.")
+			fmt.Println(" ! Please check the spelling and try again.")
+			os.Exit(1)
 		}
 	}
 }
@@ -191,13 +220,13 @@ func createEvent(summary string, startTime time.Time, endTime time.Time) error {
 	if *singleCalendar {
 		// We are in single calendar mode.
 		// No matter what, put it in one calendar
-		// This would be the primary calendar
-		calendarIdForEvent = primaryCalendarID
+		// This would be the default calendar
+		calendarIdForEvent = defaultCalendarId
 	} else {
 		// Check splitSummary to see if it matches the original
 		if splitSummary[0] == summary {
-			// No hyphen, so we want to put this in the primary
-			calendarIdForEvent = primaryCalendarID
+			// No hyphen, so we want to put this in the default
+			calendarIdForEvent = defaultCalendarId
 		} else {
 			// So, there is a hyphen, and we know what's on the left side now
 			eventCategoryName := strings.ToLower(splitSummary[0])
