@@ -73,8 +73,9 @@ go get code.google.com/p/google-api-go-client/calendar/v3
 ````
 
 Next, register an application at the
-[Google API Console](https://code.google.com/apis/console/), and obtain a set
-of OAuth consumer keys. Get your client ID and secret ready.
+[Google API Console](https://code.google.com/apis/console/), enable Google
+Calendar on your app, and obtain a set of OAuth consumer keys. Get your
+client ID and secret ready.
 
 Execute the program like so:
 
