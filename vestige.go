@@ -46,6 +46,12 @@ var calendarApi *calendar.Service
 // Initialize an empty calendar list for later caching of calendars
 var calendarList = make(map[string]string)
 
+// Initialize a string with the calendar name of the primary calendar
+var primaryCalendarName string;
+
+// Initialize a string with the calendar ID of the primary calendar
+var primaryCalendarID string;
+
 func main() {
 	// Parse the flags first
 	flag.Parse()
@@ -122,19 +128,25 @@ func applicationLoop() {
 
 func loadCalendars() {
 	// List available calendars
-	calendarListFromApi, err := calendarApi.CalendarList.List().MaxResults(50).MinAccessRole("writer").Do();
+	calendarListFromApi, err := calendarApi.CalendarList.List().MaxResults(50).MinAccessRole("writer").Do()
 
 	if err != nil {
 		fmt.Println(" * An error occurred:")
-		fmt.Println(err);
+		fmt.Println(err)
 		os.Exit(1)
 	}
 
 	// Calendars are now listed into calendarList
 	// Let's get them out into the calendarList map
-	for _,element := range calendarListFromApi.Items {
+	for _, element := range calendarListFromApi.Items {
 		// Assign the lowercased name to the ID of the calendar
 		calendarList[strings.ToLower(element.Summary)] = element.Id
+
+		// Check if it's the primary
+		if element.Primary {
+			primaryCalendarName = strings.ToLower(element.Summary)
+			primaryCalendarID = strings.ToLower(element.Id)
+		}
 	}
 }
 
