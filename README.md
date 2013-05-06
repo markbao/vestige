@@ -76,6 +76,8 @@ The first version of Vestige was written in Python. It's still usable, but the G
 * Done! — Support different calendars (as categories). 'Personal - Doing taxes' would go into the Personal calendar.
 * Done! — When a category doesn't exist, create it. (We'll need to load a list of calendars in the beginning, and load it again when we create one.)
 * Done! — Allow a user to switch between creating categories when the hyphen is used, or just putting it into the primary calendar.
+* Allow tab-completion of known categories
+* Integrate spelling suggestions for misspelled categories
 
 ### Offline stuff
 
