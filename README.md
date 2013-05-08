@@ -96,4 +96,5 @@ The first version of Vestige was written in Python. It's still usable, but the G
 * Add counter like 'Working for 1 hour and 25 minutes.'
 * Figure out a way to make sending the event data to Google not so slow (is it doing more handshakes than necessary?)
 * Done! — Make it pester you (ring a terminal bell?) when you don't update it for a few minutes.
+* Add option to cancel current work item
 
