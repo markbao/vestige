@@ -134,24 +134,30 @@ func applicationLoop() {
 		// Echo the starting time
 		fmt.Println("")
 		fmt.Println(" * Started at", startTime.Format(time.Kitchen))
-		fmt.Print("   Hit Enter to finish work")
+		fmt.Print("   Hit Enter to finish work / Esc + Enter to cancel")
 
 		// Wait for this scan to come in
 		fmt.Scanln(&scanDummy)
 
-		// All set now, record the end time
-		endTime := time.Now()
-
-		// Next, create the event
-		fmt.Println("")
-		fmt.Println(" * Sending to Google...")
-		err := createEvent(workItem, startTime, endTime)
-
-		if err == nil {
-			fmt.Println(" * Sent.")
+		// Detect Escape key
+		if (scanDummy == "\u001b") {
+			// We are going to cancel this one
+			fmt.Println(" * Work item cancelled.")
 		} else {
-			fmt.Println(" ! An error occurred:")
-			fmt.Println(err)
+			// All set now, record the end time
+			endTime := time.Now()
+
+			// Next, create the event
+			fmt.Println("")
+			fmt.Println(" * Sending to Google...")
+			err := createEvent(workItem, startTime, endTime)
+
+			if err == nil {
+				fmt.Println(" * Sent.")
+			} else {
+				fmt.Println(" ! An error occurred:")
+				fmt.Println(err)
+			}
 		}
 
 		fmt.Println("-- END WORK ITEM --------------------------")

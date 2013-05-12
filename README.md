@@ -78,6 +78,7 @@ The first version of Vestige was written in Python. It's still usable, but the G
 * Done! — Allow a user to switch between creating categories when the hyphen is used, or just putting it into the primary calendar.
 * Allow tab-completion of known categories
 * Integrate spelling suggestions for misspelled categories
+* Trim calendar names (don't allow preceding or following spaces)
 
 ### Offline stuff
 
@@ -96,5 +97,5 @@ The first version of Vestige was written in Python. It's still usable, but the G
 * Add counter like 'Working for 1 hour and 25 minutes.'
 * Figure out a way to make sending the event data to Google not so slow (is it doing more handshakes than necessary?)
 * Done! — Make it pester you (ring a terminal bell?) when you don't update it for a few minutes.
-* Add option to cancel current work item
+* Done! — Add option to cancel current work item
 
