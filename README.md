@@ -4,7 +4,7 @@
 
 **Time passes by quickly, and sometimes a day passes by and we don't know how it happened. We work on a task, and then another, and then the day is almost over—and we don't know that we spent 30 minutes replying to that email, or 45 minutes reading the news.**
 
-Time slips by, and we can't quantify it; we're oblivious to its passing. We need to quantify it, so we can study it and make changes to our behavior and manage our time better.
+Time slips by, and we're oblivious to its passing because we don't quantify it. We need to quantify the things we do during the day and the time it takes us to do them, so we can study it and make changes to our behavior, to manage our time better.
 
 The goal is to use software to track what tasks and projects you work on during the day, and then look back on your day to see what exactly took up your time.
 
