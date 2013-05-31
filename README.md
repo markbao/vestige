@@ -1,8 +1,18 @@
 # Vestige
 
-### Command-line time tracking to Google Calendar, with task categorization. Written in Go.
+## End time ignorance.
 
-Time passes by quickly, and sometimes we don't know what happened during our day. Vestige allows you to track what you do during your day and send that data to Google Calendar.
+**Time passes by quickly, and sometimes a day passes by and we don't know how it happened. We work on a task, and then another, and then the day is almost over—and we don't know that we spent 30 minutes replying to that emial, or 45 minutes reading the news.**
+
+The goal is to use software to track what tasks and projects you work on during the day, and then look back on your day to see what exactly took up your time.
+
+Now, you go from *oblivious* to what took up time during the day, to now being *aware* of what is taking up your time, and from there, you can *decide* to make changes as necessary.
+
+## What is it?
+
+Vestige tracks your activities and puts them in Google Calendar. You start the app, type in what you're working on, and when you're done, hit Enter to finish the work item. That time block will be sent to Google Calendar so you can look at it later; now, you can start a new work item.
+
+It supports task categorization into calendars, as well as a terminal bell to notify you when you've been idle. Written in Go.
 
 Partially inspired by Chris Dancy's insane [Google Calendar tracking system](http://www.wired.com/wiredenterprise/2013/02/quantified-work/all/).
 
